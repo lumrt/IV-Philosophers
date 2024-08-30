@@ -1,5 +1,7 @@
 une fourchette = un mutex
+
 donc un tableau de philosophe qui sont des struct et un tableau de fourchette qui sont des mutex
+
 usleep = params en ms
 
 //////////// .h
@@ -54,7 +56,9 @@ promtpt ex : ./philo nb_phil ttdie tteat ttsleep [nbmaxmeal]
 data_container instance;
 
 Argc correct ? lauch : error msg with err func {ft_printf(custom err msg) + exit FAILURE}
+
 📝 in .h implement colors macro (chat gpt gen)
+
 
 if correct : 1) parse_input(&data_container, av) in data_container 
              2) init_values(&data_container) (malloc philo, fourchette, )
@@ -67,16 +71,24 @@ if correct : 1) parse_input(&data_container, av) in data_container
 
 🛠️atol -> valid input() ? check negative ; nbr is legit (   +--7234^&S✅, +-&^^744❌) ; INT MAX > ?
 ret pointeur to nbr
-valid_input{
+
+🛠️ valid_input{
+    
     // skip spaces
+
     // sign handling : if - error()
+
     Si tout ses test ont ete passés char *nbr = string d'entree
 }
 
 parse_intput {
+    
     data_container->philo_nbr = atol(av[1])
+    
     data_container->ttdie = atol(av[2]) * 1e3
+    
     data_container->tteat = atol(av[3]) * 1e3
+    
     data_container->ttsleep = atol(av[4]) * 1e3
 
     errorexit si un des parametre <60ms (6e4)
@@ -85,6 +97,7 @@ parse_intput {
         data_container->max_meal = atol(av[5])
     sinon
         data_container->max_meal = -1;
+    
     📝 tester en printant tous les parametres precedemment initialisés
     📝 ajouter au .h
 }
@@ -107,26 +120,34 @@ parse_intput {
     📝pour les msg d'erreur checker les MAN()
 
     si le status = 0 tout est bon la fonction est bien exec
+    
     si le status == EINVAL et que l'op code == LOCK || UNLOCK : valeur invalide pour le mutex
+    
     sinon si status == EINVAL et op code == INIT : valeur de l'attribut invalide
+    
     sinon si status = EDEADLK : error_exit(err apporpriee)
+    
     sinon si status = EPERM : error_exit
+    
     sinon si status = EBUSY : error_exit(mutex bloqué)
-
 }
 
-🛠️ pareil pour les threads err
+🛠️  🟥 pareil pour les threads err
 
 // 🛠️ assinger une fourchette(philo, dc->forks, i = philo position (le premier etant le philo 1 a la position 0)){
 
     int nbrphilo = philo->dc->philo_nbr
+    
     📝 on peut renommer right_fork et left_fork en first_fork et second_fork 
     📝la fourchette de droite est egale a la position du philo donc
     📝la fourchette de gauche est egale a la position du philo + 1 % philo nbr
     📝EX : fourchette de gauche du 5eme philo = fourchettes[4 (pos dans le tableau) + 1 % 5 (nbr de philo)]
     📝ainsi la fourchette de gauche du dernier philo est la premiere fourchette du tableau
 
+    📝 Je pars sur la solution des impairs mais voir algo Dijsktra
+
     philo->right/first_fork = &forks[(position + 1) % philonbr]
+    
     philo->left/second_fork = &forks[position]
     
     if (philo->id %2 == 0)
@@ -136,7 +157,9 @@ parse_intput {
 }
 
 // 🛠️ void philo init(dc) {
+    
     int i;
+    
     t_philo *philo
 
     tant que i < philonbr
@@ -145,21 +168,26 @@ parse_intput {
         is_full = false
         meals counter = 0
         philo->dc = dc
-        assinger une fourchette(philo, dc->forks, i = position dans le tableau)
-
-         
+        assinger une fourchette(philo, dc->forks, i = position dans le tableau)        
 }
 
 data_init{
+    
     is_end = false;
+    
     all_thread_ready = false;
+    
     tableau_philo = 🛠️ safemalloc(sizeof(t_philo) * philonbr) 
+    
     🛠️ safe_mutex_handle(&dc->dc_mutex, INIT)
+    
     📝 init tableau de mutex pour les fourchettes
     tableau_fourchette = 🛠️ safemalloc(sizeof(t_fork) * philonbr)
+    
     tant que i < nb philo
         🛠️ safe_mutex_handle(&data_container->forks[i].fork, INIT as opcode)
         data_container->forks[i].fork_id = i;
+    
     🛠️ philo_init(data_container)
 }
 
@@ -167,10 +195,43 @@ data_init{
 📝 create dinner.c 
 promtpt ex : ./philo nb_phil ttdie tteat ttsleep [nbmaxmeal]
 
-📝 create getters&setters.c
+📝 create getters&setters.c pour eviter d'ecrire LOCK + DO + UNLOCK
+
+// 🛠️ void set_bools(*mutex, bool *dest, bool value)
+    safe_mutex_handle(mutex, LOCK)
+    *dest = value
+    safe_mutex_handle(mutex, UNLOCK)
+
+// 🛠️ bool get_bools(*mutex, bool *value)
+    
+    bool ret;
+
+    safe_mutex_handle(mutex, LOCK)
+    ret = *value
+    safe_mutex_handle(mutex, UNLOCK)
+    return ret
+
+    🟥 == for long just change the datatype
+
+// 🛠️ wrapper get_bool = sim_finished(*dc){
+    
+    return(get_bool(&dc->dc_mutex, &dc->is_end))
+
+}
+
+📝 SPINLOCK in an other file.c 
+
+// 🛠️ wait_all_thread(*dc)
+{
+    while(!get_bool(&dc->dc_mutex, &dc->all_thread_ready))
+        ;
+}
 
 // 🛠️ void *dinner_simulation(void *data) {
+    
     t_philo *philo = (t_philo *)data 
+    
+    📝 Spinlock
     wait_all_thread(philo->dc) //to synchronize running 
 
 }
@@ -183,3 +244,7 @@ sinon : tant que i < philo_nbr
     data = &dc->philos[i], opcode = CREATE)
 
     📝 &dinner_simulation() == dinner_simulation
+
+📝 donner a la valeur all_thread_ready la valeur true avec le LOCK/UNLOCK ing de mutex adequat
+set_bools(mutex = &dc->dc_mutex, bool *dest = &dc->all_thread_ready, value = true)
+
