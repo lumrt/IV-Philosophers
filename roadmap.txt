@@ -1,0 +1,119 @@
+une fourchette = un mutex
+donc un tableau de philosophe qui sont des struct et un tableau de fourchette qui sont des mutex
+usleep = params en ms
+
+//////////// .h
+
+ Structure Philosophe { 
+ philo_index  ;
+ fourchette de droite ; 
+ fourchette de gauche ; 
+ nombre de repas mangés ;
+ boolean est-il-rassasié? ; 
+ heure du dernier repas ; 
+ pointeur fourchette de droite et pointeur fourchette de gauche ;
+ pthread_t thread_id 
+ pointeur vers le data data_container
+  ...}
+
+Structure fourchette { type_mutex fourchette ;
+ id de la fourchette ;}
+
+
+structure data_container { nombre de philo ;
+ time to die ;
+ time to eat;
+ time to sleep ; 
+ nombre de repas max ;
+ heure ou demarre la simu ;
+ bool is_end? philo die : all philo full
+ tableau des fourchette t_fork *forks 
+ tableau de philosophe t_philo *philos }
+
+enum OPcode pour les wrapper des fonction threads et mutex
+{
+    LOCK,
+    UNLOCK,
+    INIT,
+    DESTROY,
+    CREATE,
+    JOIN,
+    DETACH,
+}
+
+///////////  principles
+
+promtpt ex : ./philo nb_phil ttdie tteat ttsleep [nbmaxmeal]
+
+data_container instance;
+
+Argc correct ? lauch : error msg with err func {ft_printf(custom err msg) + exit FAILURE}
+btw in .h implement colors macro (chat gpt gen)
+
+if correct : 1) parse_input(&data_container, av) in data_container 
+             2) init_values(&data_container) (malloc philo, fourchette, )
+             3) start simulation(&data_container )
+             4) clean table (no leaks ;-)) if philo died | all philo are full 
+
+
+
+////////// parsing
+
+parse_intput {
+    data_container->philo_nbr = atol(av[1])
+    data_container->ttdie = atol(av[2]) * 1e3
+    data_container->tteat = atol(av[3]) * 1e3
+    data_container->ttsleep = atol(av[4]) * 1e3
+
+    errorexit si un des parametre <60ms (6e4)
+
+    si av[5]
+        data_container->max_meal = atol(av[5])
+    sinon
+        data_container->max_meal = -1;
+    /!\ tester en printant tous les parametres precedemment initialisés
+    ajouter au .h
+}
+
+atol -> valid input() ? check negative ; nbr is legit (   +--7234^&S✅, +-&^^744❌) ; INT MAX > ?
+ret pointeur to nbr
+valid_input{
+    // skip spaces
+    // sign handling : if - error()
+    Si tout ses test ont ete passés char *nbr = string d'entree
+}
+
+
+//////////// data_init
+
+// safe func
+
+safe malloc is a wrapper to protect malloc in 1line
+
+safemutex_handle(*mutex, opcode) = si opcode = LOCK -> handlemuterr(mutex_lock, opcode) sinon si .. : error_exit() 
+                                                                    ^^ 0 ou un status
+
+safe_thread_handle(*thread, void *(*foo)(void *), void *data, opcode) = == ^^
+
+// err_handle
+
+handle_mut_err(int status, opcode)
+{
+    pour les msg d'erreur checker les MAN()
+
+    si le status = 0 tout est bon la fonction est bien exec
+    si le status == EINVAL et que l'op code == LOCK || UNLOCK : valeur invalide pour le mutex
+    sinon si status == EINVAL et op code == INIT : valeur de l'attribut invalide
+    sinon si status = EDEADLK : error_exit(err apporpriee)
+    sinon si status = EPERM : error_exit
+    sinon si status = EBUSY : error_exit(mutex bloqué)
+
+}
+
+pareil pour les threads err
+
+data_init{
+    is_end = false;
+    tableau_philo = safemalloc(philonbr) 
+
+}
