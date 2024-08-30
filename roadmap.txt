@@ -111,9 +111,37 @@ handle_mut_err(int status, opcode)
 }
 
 pareil pour les threads err
+// assinger une fourchette(philo, dc->forks, i = philo position (le premier etant le philo 1 a la position 0)){
+
+    int nbrphilo = philo->dc->philo_nbr
+
+    la fourchette de droite est egale a la position du philo donc
+    philo->right_fork = forks[position]
+
+}
+
+// void philo init(dc) {
+    int i;
+    t_philo *philo
+
+    tant que i < philonbr
+        philo = table->philo + i 
+        dc->philo_id = i + 1; philo nb is 0 if not + 1
+        is_full = false
+        meals counter = 0
+        philo->dc = dc
+        assinger une fourchette(philo, dc->forks, i = position dans le tableau)
+
+         
+}
 
 data_init{
     is_end = false;
-    tableau_philo = safemalloc(philonbr) 
-
+    tableau_philo = safemalloc(sizeof(t_philo) * philonbr) 
+    tableau_fourchette = safemalloc(sizeof(t_fork) * philonbr)
+    // init tableau de mutex pour les fourchettes
+    tant que i < nb philo
+        safe_mutex_handle(&data_container->forks[i].fork, INIT as opcode)
+        data_container->forks[i].fork_id = i;
+    philo_init(data_container)
 }
