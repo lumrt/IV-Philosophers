@@ -4,33 +4,37 @@ usleep = params en ms
 
 //////////// .h
 
- Structure Philosophe { 
+ 📊Structure Philosophe { 
  philo_index  ;
  fourchette de droite ; 
  fourchette de gauche ; 
  nombre de repas mangés ;
  boolean est-il-rassasié? ; 
+ bool all_thread_ready;
  heure du dernier repas ; 
  pointeur fourchette de droite et pointeur fourchette de gauche ;
  pthread_t thread_id 
  pointeur vers le data data_container
   ...}
 
-Structure fourchette { type_mutex fourchette ;
- id de la fourchette ;}
+📊Structure fourchette { 
+    type_mutex fourchette ;
+    id de la fourchette ;
+}
 
 
-structure data_container { nombre de philo ;
+📊structure data_container { nombre de philo ;
  time to die ;
  time to eat;
  time to sleep ; 
  nombre de repas max ;
  heure ou demarre la simu ;
  bool is_end? philo die : all philo full
+ dc_mutex; eviter les data race quand on lis le dc
  tableau des fourchette t_fork *forks 
  tableau de philosophe t_philo *philos }
 
-enum OPcode pour les wrapper des fonction threads et mutex
+📊enum OPcode pour les wrapper des fonction threads et mutex
 {
     LOCK,
     UNLOCK,
@@ -45,10 +49,12 @@ enum OPcode pour les wrapper des fonction threads et mutex
 
 promtpt ex : ./philo nb_phil ttdie tteat ttsleep [nbmaxmeal]
 
+0️⃣////////// main
+
 data_container instance;
 
 Argc correct ? lauch : error msg with err func {ft_printf(custom err msg) + exit FAILURE}
-btw in .h implement colors macro (chat gpt gen)
+📝 in .h implement colors macro (chat gpt gen)
 
 if correct : 1) parse_input(&data_container, av) in data_container 
              2) init_values(&data_container) (malloc philo, fourchette, )
@@ -57,7 +63,15 @@ if correct : 1) parse_input(&data_container, av) in data_container
 
 
 
-////////// parsing
+1️⃣////////// parsing
+
+🛠️atol -> valid input() ? check negative ; nbr is legit (   +--7234^&S✅, +-&^^744❌) ; INT MAX > ?
+ret pointeur to nbr
+valid_input{
+    // skip spaces
+    // sign handling : if - error()
+    Si tout ses test ont ete passés char *nbr = string d'entree
+}
 
 parse_intput {
     data_container->philo_nbr = atol(av[1])
@@ -71,35 +85,26 @@ parse_intput {
         data_container->max_meal = atol(av[5])
     sinon
         data_container->max_meal = -1;
-    /!\ tester en printant tous les parametres precedemment initialisés
-    ajouter au .h
+    📝 tester en printant tous les parametres precedemment initialisés
+    📝 ajouter au .h
 }
 
-atol -> valid input() ? check negative ; nbr is legit (   +--7234^&S✅, +-&^^744❌) ; INT MAX > ?
-ret pointeur to nbr
-valid_input{
-    // skip spaces
-    // sign handling : if - error()
-    Si tout ses test ont ete passés char *nbr = string d'entree
-}
-
-
-//////////// data_init
+2️⃣//////////// data_init
 
 // safe func
 
-safe malloc is a wrapper to protect malloc in 1line
+🛠️ safe malloc is a wrapper to protect malloc in 1line
 
-safemutex_handle(*mutex, opcode) = si opcode = LOCK -> handlemuterr(mutex_lock, opcode) sinon si .. : error_exit() 
+🛠️ safemutex_handle(*mutex, opcode) = si opcode = LOCK -> handlemuterr(mutex_lock, opcode) sinon si .. : error_exit() 
                                                                     ^^ 0 ou un status
 
-safe_thread_handle(*thread, void *(*foo)(void *), void *data, opcode) = == ^^
+🛠️ safe_thread_handle(*thread, void *(*foo)(void *), void *data, opcode) = == ^^
 
 // err_handle
 
-handle_mut_err(int status, opcode)
+🛠️ handle_mut_err(int status, opcode)
 {
-    pour les msg d'erreur checker les MAN()
+    📝pour les msg d'erreur checker les MAN()
 
     si le status = 0 tout est bon la fonction est bien exec
     si le status == EINVAL et que l'op code == LOCK || UNLOCK : valeur invalide pour le mutex
@@ -110,17 +115,27 @@ handle_mut_err(int status, opcode)
 
 }
 
-pareil pour les threads err
-// assinger une fourchette(philo, dc->forks, i = philo position (le premier etant le philo 1 a la position 0)){
+🛠️ pareil pour les threads err
+
+// 🛠️ assinger une fourchette(philo, dc->forks, i = philo position (le premier etant le philo 1 a la position 0)){
 
     int nbrphilo = philo->dc->philo_nbr
+    📝 on peut renommer right_fork et left_fork en first_fork et second_fork 
+    📝la fourchette de droite est egale a la position du philo donc
+    📝la fourchette de gauche est egale a la position du philo + 1 % philo nbr
+    📝EX : fourchette de gauche du 5eme philo = fourchettes[4 (pos dans le tableau) + 1 % 5 (nbr de philo)]
+    📝ainsi la fourchette de gauche du dernier philo est la premiere fourchette du tableau
 
-    la fourchette de droite est egale a la position du philo donc
-    philo->right_fork = forks[position]
+    philo->right/first_fork = &forks[(position + 1) % philonbr]
+    philo->left/second_fork = &forks[position]
+    
+    if (philo->id %2 == 0)
+        philo->right/first_fork = &forks[position]
+        philo->left/second_fort = &forks[(position + 1) % philonbr]
 
 }
 
-// void philo init(dc) {
+// 🛠️ void philo init(dc) {
     int i;
     t_philo *philo
 
@@ -137,11 +152,34 @@ pareil pour les threads err
 
 data_init{
     is_end = false;
-    tableau_philo = safemalloc(sizeof(t_philo) * philonbr) 
-    tableau_fourchette = safemalloc(sizeof(t_fork) * philonbr)
-    // init tableau de mutex pour les fourchettes
+    all_thread_ready = false;
+    tableau_philo = 🛠️ safemalloc(sizeof(t_philo) * philonbr) 
+    🛠️ safe_mutex_handle(&dc->dc_mutex, INIT)
+    📝 init tableau de mutex pour les fourchettes
+    tableau_fourchette = 🛠️ safemalloc(sizeof(t_fork) * philonbr)
     tant que i < nb philo
-        safe_mutex_handle(&data_container->forks[i].fork, INIT as opcode)
+        🛠️ safe_mutex_handle(&data_container->forks[i].fork, INIT as opcode)
         data_container->forks[i].fork_id = i;
-    philo_init(data_container)
+    🛠️ philo_init(data_container)
 }
+
+3️⃣/////////// Dinner start
+📝 create dinner.c 
+promtpt ex : ./philo nb_phil ttdie tteat ttsleep [nbmaxmeal]
+
+📝 create getters&setters.c
+
+// 🛠️ void *dinner_simulation(void *data) {
+    t_philo *philo = (t_philo *)data 
+    wait_all_thread(philo->dc) //to synchronize running 
+
+}
+
+
+si dc->max meals = 0 : return
+sinon si il n'y a qu'un philo : 🚨
+sinon : tant que i < philo_nbr
+    safe_thread_handle(thread = &dc->philo[i].thread_id, pointer_func = dinner_simulation,
+    data = &dc->philos[i], opcode = CREATE)
+
+    📝 &dinner_simulation() == dinner_simulation
