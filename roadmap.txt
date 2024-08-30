@@ -12,7 +12,7 @@ usleep = params en ms
  fourchette de gauche ; 
  nombre de repas mangés ;
  boolean est-il-rassasié? ; 
- bool all_thread_ready;
+ philo_mutex ;
  heure du dernier repas ; 
  pointeur fourchette de droite et pointeur fourchette de gauche ;
  pthread_t thread_id 
@@ -32,7 +32,11 @@ usleep = params en ms
  nombre de repas max ;
  heure ou demarre la simu ;
  bool is_end? philo die : all philo full
+ t_pthread monitor;
  dc_mutex; eviter les data race quand on lis le dc
+ write_mutex ;
+ long thread_runings_nbr;
+ bool all_thread_ready;
  tableau des fourchette t_fork *forks 
  tableau de philosophe t_philo *philos }
 
@@ -46,6 +50,22 @@ usleep = params en ms
     JOIN,
     DETACH,
 }
+
+📊enum e_time_code {
+    SECONDS,
+    MILLISECONDS,
+    MICROSECONDS,
+}   t_time_code
+
+📊 enum e_philo_state {
+
+    SLEEPING,
+    THINKING,
+    EATING
+    TAKING RIGHT FORK,
+    TAKING LEFT FORK,
+    DIED,
+}   t_philo_state
 
 ///////////  principles
 
@@ -168,6 +188,7 @@ parse_intput {
         is_full = false
         meals counter = 0
         philo->dc = dc
+        safe_mutex_handle(&philo->philo_mutex, INIT);
         assinger une fourchette(philo, dc->forks, i = position dans le tableau)        
 }
 
@@ -177,10 +198,14 @@ data_init{
     
     all_thread_ready = false;
     
+    dc->thread_runings_nbr  = 0
+
     tableau_philo = 🛠️ safemalloc(sizeof(t_philo) * philonbr) 
     
     🛠️ safe_mutex_handle(&dc->dc_mutex, INIT)
     
+    🛠️ safe_mutex_handle(&dc->write_mutex, INIT)
+
     📝 init tableau de mutex pour les fourchettes
     tableau_fourchette = 🛠️ safemalloc(sizeof(t_fork) * philonbr)
     
@@ -227,6 +252,76 @@ promtpt ex : ./philo nb_phil ttdie tteat ttsleep [nbmaxmeal]
         ;
 }
 
+// 🛠️ bool all_runing()
+{
+
+}
+
+// 🛠️ sharp_usleep()
+{
+     oceano 1:20:00
+}
+
+// 🛠️ write_state(){
+    oceano 1:25:00
+}
+// 🛠️ gettime(t_time_code time_code){
+    
+    struct timeval  tv;
+    if (gettimeofday(&tv, NULL))
+        error_exit;
+    if (time_code == SECOND)
+       return (tv.tv_sec + (tv.t_usec)/1e6)
+    else if (timecode == MILLISECONDS)
+        return (tv.tv_sec * 1e3 + (tv.t_usec/1e3))
+    else if (timecode == MICROSECONDS)
+        return(tv.tv_sec * 1e6 + tv.tv_usec)
+    else
+        error_exit(gettime bad inputs)
+    return 42
+}
+
+// 🛠️ eat(*philo){
+
+    1)
+
+    safe_mutex_handle(&philo->first_fork->fork, LOCK)
+    write_state(TAKE FIRST FORK, philo)
+    safe_mutex_handle(&philo->second_fork->fork, LOCK)
+    write_state(TAKE SECOND FORK, philo)
+
+    2)
+    
+    set_long(philo->philo_mutex, &last_meal_time, gettime(MILLISECONDS))
+    philo->meals_counter++;
+    write_state(EATING, philo)
+    sharp_usleep(philo->dc->tteat, philo->dc)
+    if (philo->dc->max_meal > 0 && philo->meals_counter == philo->dc->max_meal)
+        set_bools(philo->philo_mutex, &is_full, true)
+
+    safe_mutex_handle(&philo->first_fork->fork, UNLOCK)
+    safe_mutex_handle(&philo->second_fork->fork, UNLOCK)
+
+}
+
+// 🛠️ thinking(*philo) {
+
+    write_state(THINKING, philo);
+}
+
+// 🛠️ monitor_dinner(void *data) {
+    *dc = (t_dc*)data;
+
+    while(!all_runing()) // oceano 1:41 
+        ;
+
+    while (!sim_finished(dc))
+        while (i < dc->philo_nbr && !sim_finished(dc ))
+         if (philo_died(dc->philos)) // oceano 1:44 
+            set_bools(&dc->dc_mutex, &dc->is_end, true)
+            write_state(DIED, dc->philo) 
+}   
+
 // 🛠️ void *dinner_simulation(void *data) {
     
     t_philo *philo = (t_philo *)data 
@@ -234,17 +329,115 @@ promtpt ex : ./philo nb_phil ttdie tteat ttsleep [nbmaxmeal]
     📝 Spinlock
     wait_all_thread(philo->dc) //to synchronize running 
 
+    📝 set last meal time
+    set_long(&philo->philo_mutex, &philo->last_meal_time, gettime(MILLISECONDS ))
+    increase_long(&philo->dc->dc_mutex, &philo->dc->thread_runings_nbr) // oceano 1:39
+    
+    while (!sim_finished(philo->dc))
+        si le philo est full
+            break
+        eat(philo);
+
+        // sleep
+        write_state(SLEEPING, philo)
+        sharp_usleep(philo->dc->ttsleep, philo->dc)
+
+        thinking(philo);
+
 }
 
 
 si dc->max meals = 0 : return
-sinon si il n'y a qu'un philo : 🚨
+
+sinon si il n'y a qu'un philo : lone_philo // oceano 1:48
+
 sinon : tant que i < philo_nbr
+    
+    📝 &dinner_simulation() == dinner_simulation
     safe_thread_handle(thread = &dc->philo[i].thread_id, pointer_func = dinner_simulation,
+    
     data = &dc->philos[i], opcode = CREATE)
 
-    📝 &dinner_simulation() == dinner_simulation
+📝 death monitor
+safe_thread_handle(&dc->monitor, monitor_dinner, dc, CREATE)
+
+📝 time that sim start
+dc->start_simulation =  gettime(MILLISECONDS)
 
 📝 donner a la valeur all_thread_ready la valeur true avec le LOCK/UNLOCK ing de mutex adequat
 set_bools(mutex = &dc->dc_mutex, bool *dest = &dc->all_thread_ready, value = true)
 
+tant que i < nb_philos
+    safe_thread_handle(&dc->philos[i].thread_id, NULL , NULL, JOIN)
+
+safe_thread_handle(&table->monitor, NULL, NULL, JOIN)
+
+
+
+REMAINING CLEAN WITH NO LEAKS
+
+
+
+
+1. Structures de Données
+Philosophe
+philo_index : Indice du philosophe, pour identifier chaque thread/philosophe.
+fourchette de droite/gauche : Référence aux fourchettes que le philosophe tente de saisir.
+nombre de repas mangés : Compteur du nombre de repas que le philosophe a mangés.
+est-il-rassasié : Booléen indiquant si le philosophe a atteint son nombre maximal de repas.
+philo_mutex : Mutex pour protéger l'accès aux données critiques du philosophe.
+heure du dernier repas : Temps depuis le dernier repas du philosophe.
+pointeurs fourchette de droite/gauche : Pointeurs vers les fourchettes adjacentes.
+pthread_t thread_id : Identifiant du thread associé à ce philosophe.
+pointeur vers le data data_container : Référence à la structure principale pour accéder aux données globales.
+Fourchette
+type_mutex fourchette : Mutex pour synchroniser l'accès à chaque fourchette.
+id de la fourchette : Identifiant unique de chaque fourchette.
+Data Container
+nombre de philo : Nombre total de philosophes.
+time to die, eat, sleep : Temps limite pour mourir, manger et dormir.
+nombre de repas max : Nombre maximal de repas qu'un philosophe peut manger avant d'être rassasié.
+heure ou démarre la simu : Heure à laquelle la simulation commence.
+is_end? : Booléen indiquant si la simulation est terminée.
+monitor : Thread de surveillance pour surveiller la mort des philosophes.
+dc_mutex : Mutex pour protéger l'accès aux données globales.
+write_mutex : Mutex pour protéger l'accès aux fonctions d'écriture (écriture dans la console par exemple).
+thread_runings_nbr : Nombre de threads en cours d'exécution.
+all_thread_ready : Indique si tous les threads sont prêts à démarrer.
+tableau des fourchette/philosophe : Tableaux des fourchettes et philosophes.
+2. Fonctions Principales
+2.1. Parsing et Initialisation
+parse_input : Fonction pour parser les arguments de la ligne de commande et initialiser les valeurs dans data_container.
+Conversion des entrées en entiers, gestion des erreurs, et conversion des temps en microsecondes.
+init_values : Fonction pour allouer de la mémoire aux tableaux de philosophes et fourchettes, et initialiser les mutex associés.
+Utilisation de safe_malloc pour éviter les erreurs d'allocation mémoire.
+Initialisation des mutex pour les philosophes et les fourchettes.
+2.2. Simulation
+start_simulation : Lance la simulation en créant un thread pour chaque philosophe, ainsi qu'un thread de surveillance (monitor_dinner).
+
+Utilisation de safe_thread_handle pour gérer la création de threads en toute sécurité.
+Le thread de surveillance surveille si un philosophe meurt (si le temps depuis son dernier repas dépasse time to die).
+dinner_simulation : Fonction principale exécutée par chaque thread de philosophe.
+
+Un philosophe tente de prendre ses fourchettes (mutex), mange, dort, et pense.
+Gestion des états des philosophes (EATING, SLEEPING, THINKING).
+2.3. Synchronisation
+safe_mutex_handle et safe_thread_handle : Wrappers pour manipuler en toute sécurité les mutex et threads (init, lock, unlock, destroy, etc.).
+Gestion des erreurs via handle_mut_err pour s'assurer que les opérations sur les mutex et les threads se déroulent correctement.
+2.4. Monitor
+monitor_dinner : Thread de surveillance pour surveiller si un philosophe meurt.
+Vérifie périodiquement si le temps depuis le dernier repas d'un philosophe a dépassé time to die.
+3. Flux Global du Programme
+Initialisation :
+
+Le programme commence par parser les arguments d'entrée et initialise toutes les structures de données nécessaires.
+Alloue la mémoire pour les philosophes et les fourchettes, et initialise les mutex.
+Simulation :
+
+Chaque philosophe est exécuté dans un thread séparé.
+Un thread de surveillance est lancé pour monitorer la mort des philosophes.
+Les philosophes passent par des cycles d'activité : prendre les fourchettes, manger, dormir, et penser.
+Fin de Simulation :
+
+La simulation se termine si un philosophe meurt ou si tous les philosophes ont mangé le nombre maximal de repas.
+Tous les threads sont joints (JOIN), et les ressources allouées sont libérées (éviter les fuites mémoire).
