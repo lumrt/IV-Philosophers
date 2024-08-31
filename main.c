@@ -1,64 +1,42 @@
-#include <unistd.h>
-#include <stdio.h>
-#include <pthread.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lucas <lucas@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/31 13:43:02 by lucas             #+#    #+#             */
+/*   Updated: 2024/08/31 15:15:43 by lucas            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-// the initial balance is 0
-int balance = 0;
+#include "philosophers.h"
 
-// write the new balance (after as simulated 1/4 second delay)
-void write_balance(int new_balance)
+int	main(int ac, char **av)
 {
-  usleep(250000);
-  balance = new_balance;
-}
+	t_data	data;
+	
+	if (ac == 5 || ac == 6)
+	{
+		// 1) correct input + lexer
+		parsing(&data, av);
+		// printf("debug : nb philo = %ld\n", data.nb_philo);
+		// printf("debug : ttdie = %ld\n", data.ttdie);
+		// printf("debug : tteat = %ld\n", data.tteat);
+		// printf("debug : ttsleep = %ld\n", data.ttsleep);
+		// printf("debug : max meal = %ld\n", data.max_meal);
 
-// returns the balance (after a simulated 1/4 seond delay)
-int read_balance()
-{
-  usleep(250000);
-  return balance;
-}
+		// 2) create things
+		//init_all(&data); // TODO
 
-// carry out a deposit
-void* deposit(void *amount)
-{
-  // retrieve the bank balance
-  int account_balance = read_balance();
-
-  // make the update locally
-  account_balance += *((int *) amount);
-
-  // write the new bank balance
-  write_balance(account_balance);
-
-  return NULL;
-}
-
-int main()
-{
-  // output the balance before the deposits
-  int before = read_balance();
-  printf("Before: %d\n", before);
-
-  // we'll create two threads to conduct a deposit using the deposit function
-  pthread_t thread1;
-  pthread_t thread2;
-
-  // the deposit amounts... the correct total afterwards should be 500
-  int deposit1 = 300;
-  int deposit2 = 200;
-
-  // create threads to run the deposit function with these deposit amounts
-  pthread_create(&thread1, NULL, deposit, (void*) &deposit1);
-  pthread_create(&thread2, NULL, deposit, (void*) &deposit2);
-
-  // join the threads
-  pthread_join(thread1, NULL);
-  pthread_join(thread2, NULL);
-
-  // output the balance after the deposits
-  int after = read_balance();
-  printf("After: %d\n", after);
-
-  return 0;
+		// 3)
+		//start_simulation(&data);
+		
+		// 4) when philo is full | 1 philo died ☠️
+		//clean_all(&data);
+	}
+	else
+	{
+		error_exit("Wrong Input\n ./philo nb ttdie tteat ttsleep [max]");
+	}
 }

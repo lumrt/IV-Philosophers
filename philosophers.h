@@ -3,12 +3,33 @@
 #include <stdlib.h> // malloc, free
 #include <unistd.h> // usleep
 #include <stdbool.h> // boolean condition
+#include <limits.h> // INTMAX
 #include <pthread.h> // mutex, threading
 #include <sys/time.h> // get time of the day
 
-typedef pthread_mutex_t t_mutex;
+typedef pthread_mutex_t	t_mutex; // avoid line_too_long
 
+typedef struct s_data	t_data;
 //** Structures **//
+
+typedef struct s_fork
+{
+	t_mutex	fork;
+	int	fork_id; // place of the fork IN TAB (1st one get index 0)
+}	t_fork;
+
+typedef struct s_philo
+{
+	int	index;	// place of the philo IN TAB (1st one get index 0)
+	long	meal_counter; // varible to check max meal
+	bool	isfull; // boolean indicationg if the philo ate the max meals
+	long	last_meal;
+	t_fork	*left_fork;
+	t_fork	*right_fork;
+	pthread_t	thread_index;
+	pthread_t	monitoring;
+	t_data	*data;
+}	t_philo;
 
 typedef struct s_data
 {
@@ -22,25 +43,16 @@ typedef struct s_data
 	t_fork	*forks; // arrray of forks
 	t_philo	*philos; // array of philos
 
-};
+}	t_data;
 
-typedef struct s_fork
-{
-	t_mutex	fork;
-	int	fork_id; // place of the fork IN TAB (1st one get index 0)
-}	t_fork;
 
 /* PHILO */
 
-typedef struct s_philo
-{
-	int	index;	// place of the philo IN TAB (1st one get index 0)
-	long	meal_counter; // varible to check max meal
-	bool	isfull; // boolean indicationg if the philo ate the max meals
-	long	last_meal;
-	t_fork	*left_fork;
-	t_fork	*right_fork;
-	pthread_t thread_index;
 
-}	t_philo;
+//////////// TOOLS.c /////////////
 
+void    error_exit(char *err_str);
+
+/////////// PARSING.c ////////////
+
+void    parsing(t_data *data, char **av);
