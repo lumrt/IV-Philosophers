@@ -6,10 +6,25 @@
 #include <limits.h> // INTMAX
 #include <pthread.h> // mutex, threading
 #include <sys/time.h> // get time of the day
+#include <errno.h> // better error handling espacially for mutexes
 
 typedef pthread_mutex_t	t_mutex; // avoid line_too_long
 
 typedef struct s_data	t_data;
+
+// ** ENUMS **//
+
+typedef enum e_flags
+{
+	LOCK,
+	UNLOCK,
+	INIT,
+	DESTROY,
+	CREATE,
+	JOIN,
+	DETACH,
+} t_flags ;
+
 //** Structures **//
 
 typedef struct s_fork
@@ -56,3 +71,9 @@ void    error_exit(char *err_str);
 /////////// PARSING.c ////////////
 
 void    parsing(t_data *data, char **av);
+
+////////// WRAPPER.c ////////////
+
+void    safe_malloc_handle(size_t bytes);
+void	safe_mutex_handler(t_mutex *mtx, t_flags flag);
+void	safe_thread_handler(); //TODO
