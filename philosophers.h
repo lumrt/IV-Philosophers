@@ -55,6 +55,8 @@ typedef struct s_data
 	long	max_meal; // av[5] optionnal in []
 	long	simulation_date; // date when sim start
 	bool	is_end; 
+	bool	trheads_sync; 
+	t_mutex variable_mtx; // avoid datarace on booleans and variables
 	t_fork	*forks; // arrray of forks
 	t_philo	*philos; // array of philos
 	int	debug_mode;
