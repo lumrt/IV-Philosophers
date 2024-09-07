@@ -6,20 +6,12 @@
 /*   By: lucas <lucas@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 16:57:08 by lucas             #+#    #+#             */
-/*   Updated: 2024/09/04 17:24:39 by lucas            ###   ########.fr       */
+/*   Updated: 2024/09/07 15:57:33 by lucas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-void    safe_malloc_handle(size_t bytes)
-{
-    void    *res;
-    res = malloc(bytes);
-    if (!res)
-        error_exit("malloc failed");
-    return (res);
-}
 
  // MUTEX WRAPPER//
 
@@ -56,13 +48,13 @@ void    safe_mutex_handler(t_mutex *mtx, t_flags flag)
 
 // THREADS WRAPPER
 
-static void	handle_thread_error(int status, t_flags flag)
-{
+// static void	handle_thread_error(int status, t_flags flag)
+// {
 
-}
+// }
 
-void	safe_thread_handler(pthread_t *thread, void *(*foo)(void *),
-		 void *data, t_flags flag)
-{
+// void	safe_thread_handler(pthread_t *thread, void *(*foo)(void *),
+// 		 void *data, t_flags flag)
+// {
 	
-}
+// }

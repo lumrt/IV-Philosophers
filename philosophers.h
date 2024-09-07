@@ -57,6 +57,7 @@ typedef struct s_data
 	bool	is_end; 
 	t_fork	*forks; // arrray of forks
 	t_philo	*philos; // array of philos
+	int	debug_mode;
 
 }	t_data;
 
@@ -77,3 +78,7 @@ void    parsing(t_data *data, char **av);
 void    safe_malloc_handle(size_t bytes);
 void	safe_mutex_handler(t_mutex *mtx, t_flags flag);
 void	safe_thread_handler(); //TODO
+
+////////// DATA.C ///////////////
+
+void    init_all(t_data *data);

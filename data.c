@@ -6,7 +6,7 @@
 /*   By: lucas <lucas@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 16:54:41 by lucas             #+#    #+#             */
-/*   Updated: 2024/09/05 16:25:06 by lucas            ###   ########.fr       */
+/*   Updated: 2024/09/07 16:07:51 by lucas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,16 @@
 
 static void	assign_forks(t_philo *philo, t_fork *forks, int position)
 {
-	// TODO
+	int	philo_nbr;
+
+	philo_nbr = philo->data->nb_philo;
+	philo->right_fork = &forks[(position + 1) % philo_nbr];
+	philo->left_fork = &forks[position];
+	if (philo->index % 2 == 0)
+	{
+		philo->right_fork = &forks[position];
+		philo->left_fork = &forks[(position + 1) % philo_nbr];
+	}
 }
 
 static void	philo_init(t_data *data)
@@ -22,29 +31,39 @@ static void	philo_init(t_data *data)
 	int	i;
 	t_philo	*philo;
 
-	i = -1;
-	while (i++ < philo->nb_philo)
+	i = 0;
+	while (i < data->nb_philo)
 	{
 		philo = data->philos + i;
 		philo->index = i + 1;
 		philo->isfull = false;
 		philo->meal_counter = 0;
 		philo->data = data;
-
-		assign_forks(philo, data->forks, i);// TODO
+		if (data->debug_mode)
+			printf("le philo %d a bien ete initialisé\n", philo->index);
+		assign_forks(philo, data->forks, i);
+		if (data->debug_mode)
+			printf("ses fourchettes egalements\n\n");
+		i++;
 	}
 }
-void    data_init(t_data *data)
+void    init_all(t_data *data)
 {
 	int	i;
 
 	i = 0;
 	data->is_end = false;
-	data->philos = (t_philo *)safe_malloc_handle(sizeof(t_philo) * data->nb_philo); // TOFIX
-	data->forks = safe_malloc_handle(sizeof(t_fork) * data->nb_philo);
-	while (i <= data->nb_philo)
+	data->philos = malloc(sizeof(t_philo) * data->nb_philo);
+	if (!data->philos)
+		error_exit("malloc failed");
+	data->forks = malloc(sizeof(t_fork) * data->nb_philo);
+	if (!data->forks)
+		error_exit("malloc failed");
+	while (i < data->nb_philo)
 	{
 		safe_mutex_handler(&data->forks[i].fork, INIT);
 		data->forks[i].fork_id = i;
+		i++;
 	}
+	philo_init(data);
 }
