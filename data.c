@@ -6,7 +6,7 @@
 /*   By: lucas <lucas@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 16:54:41 by lucas             #+#    #+#             */
-/*   Updated: 2024/09/07 18:30:45 by lucas            ###   ########.fr       */
+/*   Updated: 2024/09/08 17:57:48 by lucas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ void    init_all(t_data *data)
 	data->philos = malloc(sizeof(t_philo) * data->nb_philo);
 	if (!data->philos)
 		error_exit("malloc failed");
+	safe_mutex_handler(&data->variable_mtx, INIT);
 	data->forks = malloc(sizeof(t_fork) * data->nb_philo);
 	if (!data->forks)
 		error_exit("malloc failed");

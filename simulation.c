@@ -6,7 +6,7 @@
 /*   By: lucas <lucas@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 16:28:49 by lucas             #+#    #+#             */
-/*   Updated: 2024/09/07 18:31:21 by lucas            ###   ########.fr       */
+/*   Updated: 2024/09/08 18:08:56 by lucas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,5 +48,7 @@ void    starting_simulation(t_data *data)
 				starting_dinner, &data->philos[i], CREATE);
 			
 		}
-
+	// now all threads ready 
+	set_b(&data->variable_mtx, &data->trheads_sync, true);
+	
 }

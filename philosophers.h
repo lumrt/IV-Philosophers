@@ -77,10 +77,21 @@ void    parsing(t_data *data, char **av);
 
 ////////// WRAPPER.c ////////////
 
-void    safe_malloc_handle(size_t bytes);
 void	safe_mutex_handler(t_mutex *mtx, t_flags flag);
 void	safe_thread_handler(); //TODO
 
 ////////// DATA.C ///////////////
 
 void    init_all(t_data *data);
+
+///////// GET SET.c /////////////
+
+void	set_b(t_mutex *mtx, bool *dst, bool value);
+bool	get_b(t_mutex *mtx, bool *value);
+void	set_l(t_mutex *mtx, long *dst, long value);
+void	get_l(t_mutex *mtx, long *dst, long value);
+bool	sim_finish(t_data *data);
+
+//////// SYNCHRO.c //////////////
+
+void   sync_threads(t_data *data);
