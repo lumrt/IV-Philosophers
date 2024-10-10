@@ -8,6 +8,8 @@
 #include <sys/time.h> // get time of the day
 #include <errno.h> // better error handling espacially for mutexes
 
+# define DEBUG_MODE 1
+
 typedef pthread_mutex_t	t_mutex; // avoid line_too_long
 
 typedef struct s_data	t_data;
@@ -25,6 +27,22 @@ typedef enum e_flags
 	DETACH,
 } t_flags ;
 
+typedef enum e_time_code
+{
+	SECOND,
+	MILLISECOND,
+	MICROSECOND,
+}	t_time_code;
+
+typedef enum e_status
+{
+	EATING,
+	SLEEPING,
+	THINKING,
+	TAKING_FIRST_FORK,
+	TAKING_SECOND_FORK,
+	DIED,
+}	t_philo_status;
 //** Structures **//
 
 typedef struct s_fork
@@ -57,6 +75,7 @@ typedef struct s_data
 	bool	is_end; 
 	bool	trheads_sync; 
 	t_mutex variable_mtx; // avoid datarace on booleans and variables
+	t_mutex	write_mtx; 
 	t_fork	*forks; // arrray of forks
 	t_philo	*philos; // array of philos
 	int	debug_mode;
@@ -70,6 +89,8 @@ typedef struct s_data
 //////////// TOOLS.c /////////////
 
 void    error_exit(char *err_str);
+long	gettime(t_time_code time_code);
+void	sharper_usleep(long usec, t_data *data);
 
 /////////// PARSING.c ////////////
 

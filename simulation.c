@@ -6,7 +6,7 @@
 /*   By: lucas <lucas@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 16:28:49 by lucas             #+#    #+#             */
-/*   Updated: 2024/09/08 18:08:56 by lucas            ###   ########.fr       */
+/*   Updated: 2024/10/10 13:35:53 by lucas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,20 @@ void    *starting_dinner(void *data)
 
 	sync_threads(philo->data); // TODO
 
+	// last meal time
+	while (!sim_finish(philo->data))
+	{
+		if (philo->isfull)
+			break;
+		// eat
+		eat(philo); // TODO
+		//sleep write status
+		write_status(SLEEPING, philo, DEBUG_MODE);
+		sharper_usleep(philo->data->ttsleep, philo->data);
+		
+		//think by default
+
+	}
 
 	return (NULL);
 }
@@ -48,7 +62,14 @@ void    starting_simulation(t_data *data)
 				starting_dinner, &data->philos[i], CREATE);
 			
 		}
+	data->simulation_date = gettime(MILLISECOND);
 	// now all threads ready 
 	set_b(&data->variable_mtx, &data->trheads_sync, true);
 	
+	// Wait for al
+	i = -1;
+	while (i++ < data->nb_philo)
+		safe_thread_handler(&data->philos[i].thread_index, NULL, NULL, JOIN);
+	
+
 }
