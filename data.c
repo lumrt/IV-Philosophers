@@ -6,7 +6,7 @@
 /*   By: lucas <lucas@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 16:54:41 by lucas             #+#    #+#             */
-/*   Updated: 2024/09/08 17:57:48 by lucas            ###   ########.fr       */
+/*   Updated: 2024/10/14 21:39:06 by lucas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ static void	philo_init(t_data *data)
 		philo->isfull = false;
 		philo->meal_counter = 0;
 		philo->data = data;
+		safe_mutex_handler(&philo->philo_mtx, INIT);
 		if (data->debug_mode)
 			printf("le philo %d a bien ete initialisé\n", philo->index);
 		assign_forks(philo, data->forks, i);

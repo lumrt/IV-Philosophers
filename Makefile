@@ -6,7 +6,7 @@
 #    By: lucas <lucas@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/31 14:42:31 by lucas             #+#    #+#              #
-#    Updated: 2024/09/07 15:54:22 by lucas            ###   ########.fr        #
+#    Updated: 2024/10/14 21:55:37 by lucas            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ HEADER = philosophers.h
 
 OBJS	=	$(SRCS:%.c=%.o)
 
-CC		=	gcc -g3
+CC		=	gcc -g3 -arch arm64
 
 CFLAGS	=	-Wall -Wextra -Werror
 

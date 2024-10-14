@@ -6,7 +6,7 @@
 /*   By: lucas <lucas@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 16:28:49 by lucas             #+#    #+#             */
-/*   Updated: 2024/10/10 13:35:53 by lucas            ###   ########.fr       */
+/*   Updated: 2024/10/14 21:49:44 by lucas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,31 +21,34 @@
     synch + join every threads
 */
 
-void    *starting_dinner(void *data)
+
+static void think(t_philo *philo)
 {
-	t_philo	*philo;
-
-	philo = (t_philo *)data;
-
-	sync_threads(philo->data); // TODO
-
-	// last meal time
-	while (!sim_finish(philo->data))
-	{
-		if (philo->isfull)
-			break;
-		// eat
-		eat(philo); // TODO
-		//sleep write status
-		write_status(SLEEPING, philo, DEBUG_MODE);
-		sharper_usleep(philo->data->ttsleep, philo->data);
-		
-		//think by default
-
-	}
-
-	return (NULL);
+	write_status(THINKING, philo, DEBUG_MODE);
 }
+
+/*eat routine 
+/* LOCK and announce that philo is taking the both forks, last meal time become gettime
+philo meal counter is incremented, check if mealcounter == max meal and UNLOCK forks for 
+the next philo*/
+
+static void eat(t_philo *philo)
+{
+	safe_mutex_handler(&philo->right_fork->fork, LOCK);
+	write_status(TAKING_FIRST_FORK, philo, DEBUG_MODE);
+	safe_mutex_handler(&philo->right_fork->fork, UNLOCK);
+	write_status(TAKING_SECOND_FORK, philo, DEBUG_MODE);
+
+	set_l(&philo->philo_mtx, philo->last_meal, gettime(MILLISECOND));
+	philo->meal_counter++;
+	write_status(EATING, philo, DEBUG_MODE);
+	sharper_usleep(philo->data->tteat, philo->data);
+	if (philo->data->max_meal > 0 && philo->meal_counter == philo->data->max_meal)
+		set_b(&philo->philo_mtx, &philo->isfull, true);
+	safe_mutex_handler(&philo->right_fork->fork, UNLOCK);
+	safe_mutex_handler(&philo->left_fork->fork, UNLOCK);
+}
+
 void    starting_simulation(t_data *data)
 {
 	int	i;
@@ -72,4 +75,24 @@ void    starting_simulation(t_data *data)
 		safe_thread_handler(&data->philos[i].thread_index, NULL, NULL, JOIN);
 	
 
+}
+
+static void    *starting_dinner(void *data)
+{
+	t_philo	*philo;
+
+	philo = (t_philo *)data;
+
+	sync_threads(philo->data);
+	while (!sim_finish(philo->data))
+	{
+		if (philo->isfull)
+			break;
+		eat(philo);
+		write_status(SLEEPING, philo, DEBUG_MODE);
+		sharper_usleep(philo->data->ttsleep, philo->data);
+		think(philo);
+	}
+
+	return (NULL);
 }

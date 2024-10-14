@@ -6,7 +6,7 @@
 /*   By: lucas <lucas@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 13:43:02 by lucas             #+#    #+#             */
-/*   Updated: 2024/09/07 16:29:24 by lucas            ###   ########.fr       */
+/*   Updated: 2024/10/14 21:50:10 by lucas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,9 @@ int	main(int ac, char **av)
 			printf("debug : max meal = %ld\n\n", data.max_meal);
 		}
 
-		// 2) create things
 		init_all(&data);
 		
-		// 3)
-		start_simulation(&data);
+		starting_simulation(&data);
 		
 		// 4) when philo is full | 1 philo died 
 		//clean_all(&data);

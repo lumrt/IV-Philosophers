@@ -59,6 +59,7 @@ typedef struct s_philo
 	long	last_meal;
 	t_fork	*left_fork;
 	t_fork	*right_fork;
+	t_mutex	philo_mtx; // useful races with monitor
 	pthread_t	thread_index;
 	pthread_t	monitoring;
 	t_data	*data;
@@ -91,6 +92,7 @@ typedef struct s_data
 void    error_exit(char *err_str);
 long	gettime(t_time_code time_code);
 void	sharper_usleep(long usec, t_data *data);
+void    write_status(t_philo_status status, t_philo *philo, bool debug);
 
 /////////// PARSING.c ////////////
 
@@ -99,7 +101,7 @@ void    parsing(t_data *data, char **av);
 ////////// WRAPPER.c ////////////
 
 void	safe_mutex_handler(t_mutex *mtx, t_flags flag);
-void	safe_thread_handler(); //TODO
+void	safe_thread_handler(pthread_t *thread, void *(*foo)(void *), void *data, t_flags flag);
 
 ////////// DATA.C ///////////////
 
@@ -116,3 +118,7 @@ bool	sim_finish(t_data *data);
 //////// SYNCHRO.c //////////////
 
 void   sync_threads(t_data *data);
+
+//////// SIMULATION.c ///////////
+
+void    starting_simulation(t_data *data);
