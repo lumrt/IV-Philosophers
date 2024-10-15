@@ -75,6 +75,8 @@ typedef struct s_data
 	long	simulation_date; // date when sim start
 	bool	is_end; 
 	bool	trheads_sync; 
+	long	nb_thread_run;
+	pthread_t monitor; //
 	t_mutex variable_mtx; // avoid datarace on booleans and variables
 	t_mutex	write_mtx; 
 	t_fork	*forks; // arrray of forks

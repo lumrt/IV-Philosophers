@@ -6,7 +6,7 @@
 /*   By: lucas <lucas@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 16:54:41 by lucas             #+#    #+#             */
-/*   Updated: 2024/10/14 21:39:06 by lucas            ###   ########.fr       */
+/*   Updated: 2024/10/15 15:46:22 by lucas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ void    init_all(t_data *data)
 	i = 0;
 	data->is_end = false;
 	data->trheads_sync = false;
+	data->nb_thread_run = 0;
 	data->philos = malloc(sizeof(t_philo) * data->nb_philo);
 	if (!data->philos)
 		error_exit("malloc failed");

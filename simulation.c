@@ -6,7 +6,7 @@
 /*   By: lucas <lucas@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 16:28:49 by lucas             #+#    #+#             */
-/*   Updated: 2024/10/14 21:49:44 by lucas            ###   ########.fr       */
+/*   Updated: 2024/10/15 15:47:45 by lucas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,7 @@
     death monitor
     synch + join every threads
 */
-
-
+//TODO
 static void think(t_philo *philo)
 {
 	write_status(THINKING, philo, DEBUG_MODE);
@@ -65,6 +64,8 @@ void    starting_simulation(t_data *data)
 				starting_dinner, &data->philos[i], CREATE);
 			
 		}
+	// monitoring
+	safe_thread_handler(&data->monitor, monitor_dinner, data, CREATE);
 	data->simulation_date = gettime(MILLISECOND);
 	// now all threads ready 
 	set_b(&data->variable_mtx, &data->trheads_sync, true);
@@ -84,6 +85,7 @@ static void    *starting_dinner(void *data)
 	philo = (t_philo *)data;
 
 	sync_threads(philo->data);
+	increase_l(&philo->data->variable_mtx, &philo->data->nb_thread_run);
 	while (!sim_finish(philo->data))
 	{
 		if (philo->isfull)

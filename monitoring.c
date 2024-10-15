@@ -1,33 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   synchro.c                                          :+:      :+:    :+:   */
+/*   monitoring.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lucas <lucas@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/08 18:09:20 by lucas             #+#    #+#             */
-/*   Updated: 2024/10/15 15:49:35 by lucas            ###   ########.fr       */
+/*   Created: 2024/10/15 15:43:32 by lucas             #+#    #+#             */
+/*   Updated: 2024/10/15 15:44:47 by lucas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-// SPINLOCK 
-
-void   sync_threads(t_data *data)
+void    *monitor_dinner(void *data)
 {
-    while (!get_b(&data->variable_mtx, &data->trheads_sync))
-        ;
-}
+    t_data *data;
 
-bool    all_running()
-{
-    
-}
-
-void    increase_l(t_mutex *mtx, long *value)
-{
-    safe_mutex_handler(mtx, LOCK);
-    (* value)++;
-    safe_mutex_handler(mtx, UNLOCK);
+    data = (t_data *)data;
+    while ()
 }
