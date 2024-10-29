@@ -114,13 +114,18 @@ void    init_all(t_data *data);
 void	set_b(t_mutex *mtx, bool *dst, bool value);
 bool	get_b(t_mutex *mtx, bool *value);
 void	set_l(t_mutex *mtx, long *dst, long value);
-void	get_l(t_mutex *mtx, long *dst, long value);
+long	get_l(t_mutex *mtx, long value);
 bool	sim_finish(t_data *data);
 
 //////// SYNCHRO.c //////////////
 
 void   sync_threads(t_data *data);
+bool    all_running(t_mutex *mutex, long *threads, long nb_philo);
 
 //////// SIMULATION.c ///////////
 
 void    starting_simulation(t_data *data);
+
+/////// MONITORING.c ///////////
+
+void    *monitor_dinner(void *data2);

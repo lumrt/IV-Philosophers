@@ -6,13 +6,26 @@
 /*   By: lucas <lucas@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 16:28:49 by lucas             #+#    #+#             */
-/*   Updated: 2024/10/15 15:47:45 by lucas            ###   ########.fr       */
+/*   Updated: 2024/10/29 17:46:32 by lucas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
+void	*ft_alone(void *arg)
+{
+	t_philo	*philo;
 
+	philo = (t_philo *)arg;
+	sync_threads(philo->data);
+	set_l(&philo->philo_mtx, &philo->last_meal, gettime(MILLISECOND));
+	increase_l(&philo->data->variable_mtx, &philo->data->nb_thread_run);
+	write_status(TAKING_FIRST_FORK, philo, DEBUG_MODE);
+	while (!sim_finish(&philo->data));
+		usleep(300);
+	return (NULL);
+	
+}
 /* This is the file where all the simualtion is handled */
 /* ./philo 5 800 500 500 [2]
     if no meals -> return ([0])
@@ -56,7 +69,7 @@ void    starting_simulation(t_data *data)
 	if (data->max_meal == 0)
 		return ;
 	else if (data->nb_philo == 1)
-		;// handle when only one philo
+		safe_thread_handler(&data->philos[0].thread_index, ft_alone, &data->philos[0], CREATE);// handle when only one philo
 	else 
 		while(i++ < data->nb_philo)
 		{
@@ -84,15 +97,20 @@ static void    *starting_dinner(void *data)
 
 	philo = (t_philo *)data;
 
-	sync_threads(philo->data);
+	sync_threads(philo->data); //1;45;55
+
+	set_l(&philo->philo_mtx, &philo->last_meal, gettime(MILLISECOND));
+
 	increase_l(&philo->data->variable_mtx, &philo->data->nb_thread_run);
 	while (!sim_finish(philo->data))
 	{
 		if (philo->isfull)
 			break;
 		eat(philo);
+
 		write_status(SLEEPING, philo, DEBUG_MODE);
 		sharper_usleep(philo->data->ttsleep, philo->data);
+		
 		think(philo);
 	}
 

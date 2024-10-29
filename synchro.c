@@ -6,7 +6,7 @@
 /*   By: lucas <lucas@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 18:09:20 by lucas             #+#    #+#             */
-/*   Updated: 2024/10/15 15:49:35 by lucas            ###   ########.fr       */
+/*   Updated: 2024/10/29 16:36:30 by lucas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,19 @@ void   sync_threads(t_data *data)
         ;
 }
 
-bool    all_running()
+bool    all_running(t_mutex *mutex, long *threads, long nb_philo)
 {
-    
+    bool    rest;
+
+    rest = false;
+    safe_mutex_handler(mutex, LOCK);
+    if (*threads == nb_philo)
+        rest = true; 
+    safe_mutex_handler(mutex, UNLOCK);
+     
+    return (rest);
 }
+// to sync with the mon
 
 void    increase_l(t_mutex *mtx, long *value)
 {

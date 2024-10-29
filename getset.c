@@ -6,7 +6,7 @@
 /*   By: lucas <lucas@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 17:58:52 by lucas             #+#    #+#             */
-/*   Updated: 2024/10/14 21:53:22 by lucas            ###   ########.fr       */
+/*   Updated: 2024/10/29 17:52:15 by lucas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,15 @@ void	set_l(t_mutex *mtx, long *dst, long value)
 	safe_mutex_handler(mtx, UNLOCK);
 }
 
-void	get_l(t_mutex *mtx, long *dst, long value)
+long	get_l(t_mutex *mtx, long value)
 {
+	long	ret;
+
 	safe_mutex_handler(mtx, LOCK);
-	*dst = value;
+	ret = value;
 	safe_mutex_handler(mtx, UNLOCK);
+
+	return (ret);
 }
 bool	sim_finish(t_data *data)
 {

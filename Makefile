@@ -6,13 +6,13 @@
 #    By: lucas <lucas@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/31 14:42:31 by lucas             #+#    #+#              #
-#    Updated: 2024/10/14 21:55:37 by lucas            ###   ########.fr        #
+#    Updated: 2024/10/29 17:52:52 by lucas            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo
 
-SRCS = main.c parsing.c tools.c data.c wrapper.c
+SRCS = main.c parsing.c tools.c data.c wrapper.c monitoring.c simulation.c synchro.c write.c
 
 HEADER = philosophers.h
 
@@ -39,3 +39,5 @@ fclean	:	clean
 			@$(RM) $(NAME)
 
 re		:	fclean all
+
+
