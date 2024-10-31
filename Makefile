@@ -10,34 +10,52 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME = philo
+NAME     =		philo
 
-SRCS = main.c parsing.c tools.c data.c wrapper.c monitoring.c simulation.c synchro.c write.c
-
-HEADER = philosophers.h
-
-OBJS	=	$(SRCS:%.c=%.o)
-
-CC		=	cc #-arch arm64
-
-CFLAGS	=	-Wall -Wextra -Werror -pthread
-
-.PHONY	:	all clean fclean re
-
-all		:	$(NAME)
-
-$(NAME)	:	$(OBJS) $(HEADER)
-			$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
-
-%.o 	:	%.c $(HEADER)
-			$(CC) $(CFLAGS) -c $< -o $@
-
-clean	:
-			@rm -f $(OBJS) $(NAME)
-
-fclean	:	clean
-			@$(RM) $(NAME)
-
-re		:	fclean all
+SRC	     =		src/data.c	\
+				src/getset.c 	\
+				src/monitoring.c 	\
+				src/main.c  		\
+				src/parsing.c 	\
+				src/simulation.c 			\
+			    src/synchro.c	\
+				src/tools.c 		\
+				src/wrapper.c 	\
+				src/write.c 	\
 
 
+CC       =	    cc
+
+CFLAGS   =	    -Wall -Wextra -Werror -pthread -g3 -I./inc
+
+OBJ_DIR	 =	    obj/
+
+SRCS     =      $(SRC)
+
+OBJ 	 =      $(patsubst src/%.c, $(OBJ_DIR)%.o, $(SRCS))
+
+MAKE_DIR =      mkdir -p
+
+SMAKE	 =      make --no-print-directory
+
+all:	        $(NAME)
+
+$(NAME):        $(OBJ)
+				@$(CC) $(CFLAGS) $(OBJ) -o $@ -pthread
+				
+$(OBJ_DIR)%.o:  src/%.c
+			    @mkdir -p $(OBJ_DIR)
+			    @$(CC) $(CFLAGS) -c $< -o $@ 
+
+clean:
+				@rm -rf $(OBJ_DIR)
+				@echo "\033[1;31m======== philo object files removed ========\033[0m"
+
+fclean:         clean
+				@$(RM) $(NAME)
+				@echo "\033[1;31m======= philo executable removed =======\033[0m"
+
+re:             fclean
+				@$(SMAKE)
+
+.PHONY: clean fclean all re
