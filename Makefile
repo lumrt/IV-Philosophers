@@ -18,9 +18,9 @@ HEADER = philosophers.h
 
 OBJS	=	$(SRCS:%.c=%.o)
 
-CC		=	gcc -g3 -arch arm64
+CC		=	cc #-arch arm64
 
-CFLAGS	=	-Wall -Wextra -Werror
+CFLAGS	=	-Wall -Wextra -Werror -pthread
 
 .PHONY	:	all clean fclean re
 

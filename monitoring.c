@@ -34,7 +34,7 @@ void    *monitor_dinner(void *data2)
     
     data = (t_data *)data2;
     while (!all_running(&data->variable_mtx, &data->nb_thread_run,
-             &data->nb_philo))
+            data->nb_philo))
     ;
     while (!sim_finish(data))
     {

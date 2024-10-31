@@ -121,10 +121,12 @@ bool	sim_finish(t_data *data);
 
 void   sync_threads(t_data *data);
 bool    all_running(t_mutex *mutex, long *threads, long nb_philo);
+void    increase_l(t_mutex *mtx, long *value);
 
 //////// SIMULATION.c ///////////
 
 void    starting_simulation(t_data *data);
+void    *starting_dinner(void *data);
 
 /////// MONITORING.c ///////////
 

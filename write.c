@@ -12,6 +12,22 @@
 
 #include "philosophers.h"
 
+static void write_status_debug(t_philo_status status, t_philo *philo, long elapsed)
+{
+    if (status == TAKING_FIRST_FORK && !sim_finish(philo->data))
+        printf("%-6ld %d has taken first fork 🍴\n", elapsed ,philo->index);
+    else if (status == TAKING_FIRST_FORK && !sim_finish(philo->data))
+        printf("%-6ld %d has taken second fork 🍴\n", elapsed ,philo->index);
+    else if (status == EATING && !sim_finish(philo->data))
+        printf("%-6ld %d is eating 🍜\n", elapsed, philo->index);
+    else if (status == SLEEPING && !sim_finish(philo->data))
+        printf("%-6ld %d is sleeping 😴\n", elapsed, philo->index);
+    else if (status == THINKING && !sim_finish(philo->data))
+        printf("%-6ld %d is thinking 🤔\n", elapsed, philo->index);
+    else if (status == DIED)
+        printf("%-6ld %d just died 💀\n", elapsed, philo->index);
+}
+
 void    write_status(t_philo_status status, t_philo *philo, bool debug)
 {
     long    elapsed;
@@ -36,24 +52,7 @@ void    write_status(t_philo_status status, t_philo *philo, bool debug)
         else if (status == THINKING && !sim_finish(philo->data))
             printf("%-6ld %d is thinking\n", elapsed, philo->index);
         else if (status == DIED)
-            printf("%-6ld %d just died\n");
+            printf("%-6ld %d just died\n", elapsed, philo->index);
     }
     safe_mutex_handler(&philo->data->write_mtx, UNLOCK);
-
-}
-
-static void write_status_debug(t_philo_status status, t_philo *philo, long elapsed)
-{
-    if (status == TAKING_FIRST_FORK && !sim_finish(philo->data))
-        printf("%-6ld %d has taken first fork 🍴\n", elapsed ,philo->index);
-    else if (status == TAKING_FIRST_FORK && !sim_finish(philo->data))
-        printf("%-6ld %d has taken second fork 🍴\n", elapsed ,philo->index);
-    else if (status == EATING && !sim_finish(philo->data))
-        printf("%-6ld %d is eating 🍜\n", elapsed, philo->index);
-    else if (status == SLEEPING && !sim_finish(philo->data))
-        printf("%-6ld %d is sleeping 😴\n", elapsed, philo->index);
-    else if (status == THINKING && !sim_finish(philo->data))
-        printf("%-6ld %d is thinking 🤔\n", elapsed, philo->index);
-    else if (status == DIED)
-        printf("%-6ld %d just died 💀\n");
 }

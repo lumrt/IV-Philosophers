@@ -21,7 +21,7 @@ void	*ft_alone(void *arg)
 	set_l(&philo->philo_mtx, &philo->last_meal, gettime(MILLISECOND));
 	increase_l(&philo->data->variable_mtx, &philo->data->nb_thread_run);
 	write_status(TAKING_FIRST_FORK, philo, DEBUG_MODE);
-	while (!sim_finish(&philo->data));
+	while(!sim_finish(philo->data))
 		usleep(300);
 	return (NULL);
 	
@@ -39,8 +39,7 @@ static void think(t_philo *philo)
 	write_status(THINKING, philo, DEBUG_MODE);
 }
 
-/*eat routine 
-/* LOCK and announce that philo is taking the both forks, last meal time become gettime
+/*LOCK and announce that philo is taking the both forks, last meal time become gettime
 philo meal counter is incremented, check if mealcounter == max meal and UNLOCK forks for 
 the next philo*/
 
@@ -51,7 +50,7 @@ static void eat(t_philo *philo)
 	safe_mutex_handler(&philo->right_fork->fork, UNLOCK);
 	write_status(TAKING_SECOND_FORK, philo, DEBUG_MODE);
 
-	set_l(&philo->philo_mtx, philo->last_meal, gettime(MILLISECOND));
+	set_l(&philo->philo_mtx, &philo->last_meal, gettime(MILLISECOND));
 	philo->meal_counter++;
 	write_status(EATING, philo, DEBUG_MODE);
 	sharper_usleep(philo->data->tteat, philo->data);
@@ -91,7 +90,7 @@ void    starting_simulation(t_data *data)
 
 }
 
-static void    *starting_dinner(void *data)
+void    *starting_dinner(void *data)
 {
 	t_philo	*philo;
 

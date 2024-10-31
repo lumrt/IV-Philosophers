@@ -13,12 +13,12 @@
 #include "philosophers.h"
 
 /* ./philo nb ttdie tteat ttsleep [max meal]*/
-static bool inline	is_space(char c)
+inline static bool 	is_space(char c)
 {
 	return ((c >= 9 && c <= 13) || c == 32);
 }
 
-static bool inline	is_digit(char c)
+inline static bool	is_digit(char c)
 {
 	return (c >= '0' && c <= '9');
 }
