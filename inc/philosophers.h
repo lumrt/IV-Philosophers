@@ -1,6 +1,7 @@
 #include <stdio.h> // printf waiting my integration
 
 #include <stdlib.h> // malloc, free
+#include <string.h> // malloc, free
 #include <unistd.h> // usleep
 #include <stdbool.h> // boolean condition
 #include <limits.h> // INTMAX
@@ -116,7 +117,7 @@ void    init_all(t_data *data);
 void	set_b(t_mutex *mtx, bool *dst, bool value);
 bool	get_b(t_mutex *mtx, bool *value);
 void	set_l(t_mutex *mtx, long *dst, long value);
-long	get_l(t_mutex *mtx, long value);
+long	get_l(t_mutex *mtx, long *value);
 bool	sim_finish(t_data *data);
 
 //////// SYNCHRO.c //////////////

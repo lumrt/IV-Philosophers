@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wrapper.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucas <lucas@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lumaret <lumaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 16:57:08 by lucas             #+#    #+#             */
-/*   Updated: 2024/10/10 12:50:31 by lucas            ###   ########.fr       */
+/*   Updated: 2024/11/04 13:11:50 by lumaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,14 +34,28 @@ static void	handle_mtx_error(int status, t_flags flag)
 
 void    safe_mutex_handler(t_mutex *mtx, t_flags flag)
 {
+	int	status;
+
 	if (flag == LOCK)
-		handle_mtx_error(pthread_mutex_lock(mtx), flag);
+	{
+		status = pthread_mutex_lock(mtx);
+		handle_mtx_error(status, flag);
+	}
 	else if (flag == UNLOCK)
-		handle_mtx_error(pthread_mutex_unlock(mtx), flag);
+	{
+		status = pthread_mutex_unlock(mtx);
+		handle_mtx_error(status, flag);
+	}
 	else if (flag == INIT)
-		handle_mtx_error(pthread_mutex_init(mtx, NULL), flag);
+	{
+		status = pthread_mutex_init(mtx, NULL);
+		handle_mtx_error(status, flag);
+	}
 	else if (flag == DESTROY)
-		handle_mtx_error(pthread_mutex_destroy(mtx), flag);
+	{
+		status = pthread_mutex_destroy(mtx);
+		handle_mtx_error(status, flag);
+	}
 	else
 		error_exit("Wrong flag for mutex\n");
 }

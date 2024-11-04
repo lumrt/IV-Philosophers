@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simulation.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucas <lucas@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lumaret <lumaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 16:28:49 by lucas             #+#    #+#             */
-/*   Updated: 2024/10/29 17:46:32 by lucas            ###   ########.fr       */
+/*   Updated: 2024/11/04 13:08:19 by lumaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void    starting_simulation(t_data *data)
 	else if (data->nb_philo == 1)
 		safe_thread_handler(&data->philos[0].thread_index, ft_alone, &data->philos[0], CREATE);// handle when only one philo
 	else 
-		while(i++ < data->nb_philo)
+		while(++i < data->nb_philo)
 		{
 			safe_thread_handler(&data->philos[i].thread_index,
 				starting_dinner, &data->philos[i], CREATE);
@@ -82,7 +82,7 @@ void    starting_simulation(t_data *data)
 	data->simulation_date = gettime(MILLISECOND);
 	// now all threads ready 
 	safe_mutex_handler(&data->start_mtx, UNLOCK);
-	// set_b(&data->variable_mtx, &data->trheads_sync, true);
+	set_b(&data->variable_mtx, &data->trheads_sync, true);
 	
 	// Wait for al
 	i = -1;

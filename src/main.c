@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucas <lucas@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lumaret <lumaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 13:43:02 by lucas             #+#    #+#             */
-/*   Updated: 2024/10/15 15:38:19 by lucas            ###   ########.fr       */
+/*   Updated: 2024/11/04 12:29:57 by lumaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ int	main(int ac, char **av)
 		}
 		init_all(&data);		
 		starting_simulation(&data);
+
 		// 4) when philo is full | 1 philo died 
 	}
 	else

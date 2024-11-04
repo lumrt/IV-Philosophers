@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   synchro.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucas <lucas@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lumaret <lumaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 18:09:20 by lucas             #+#    #+#             */
-/*   Updated: 2024/10/29 16:36:30 by lucas            ###   ########.fr       */
+/*   Updated: 2024/11/04 12:32:16 by lumaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ bool    all_running(t_mutex *mutex, long *threads, long nb_philo)
     rest = false;
     safe_mutex_handler(mutex, LOCK);
     if (*threads == nb_philo)
-        rest = true; 
+        rest = true;
     safe_mutex_handler(mutex, UNLOCK);
      
     return (rest);

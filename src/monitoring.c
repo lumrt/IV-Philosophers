@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   monitoring.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucas <lucas@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lumaret <lumaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 15:43:32 by lucas             #+#    #+#             */
-/*   Updated: 2024/10/29 17:54:13 by lucas            ###   ########.fr       */
+/*   Updated: 2024/11/04 13:06:54 by lumaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,11 @@ static bool is_dead(t_philo *philo)
     long    t2die;
 
     if (get_b(&philo->philo_mtx, &philo->isfull))
-        return (false);
-    elps = gettime(MILLISECOND) - get_l(&philo->philo_mtx, philo->last_meal);
+		return (false);
+    elps = gettime(MILLISECOND) - get_l(&philo->philo_mtx, &philo->last_meal);
     t2die = philo->data->ttdie / 1e3;
-    
+
+
     if (elps > t2die)
         return (true);
     return (false);
@@ -33,9 +34,6 @@ void    *monitor_dinner(void *data2)
     t_data  *data;
     
     data = (t_data *)data2;
-    while (!all_running(&data->variable_mtx, &data->nb_thread_run,
-            data->nb_philo))
-    ;
     while (!sim_finish(data))
     {
          i = -1;
