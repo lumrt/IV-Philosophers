@@ -6,7 +6,7 @@
 /*   By: lumaret <lumaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 15:43:32 by lucas             #+#    #+#             */
-/*   Updated: 2024/11/06 18:50:46 by lumaret          ###   ########.fr       */
+/*   Updated: 2024/11/06 20:01:37 by lumaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@ int	monitor_dinner(t_data *data)
 	while (++i < data->nb_philo && !sim_finish(data))
 	{
 		// printf("asddsa\n");
-		if (is_dead(data->philos))
+		if (is_dead(data->philos + i))
 		{
-			printf("philo nb %d died\n", data->philos->index);
+			printf("philo nb %d died\n", data->philos[i].index);
 			set_b(&data->variable_mtx, &data->is_end, true);
 			write_status(DIED, data->philos + i, DEBUG_MODE);
 			return (0);

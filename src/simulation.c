@@ -6,7 +6,7 @@
 /*   By: lumaret <lumaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 16:28:49 by lucas             #+#    #+#             */
-/*   Updated: 2024/11/06 18:49:54 by lumaret          ###   ########.fr       */
+/*   Updated: 2024/11/06 20:27:05 by lumaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,22 +54,19 @@ static void eat(t_philo *philo)
 	philo->meal_counter++;
 	write_status(EATING, philo, DEBUG_MODE);
 	set_l(&philo->philo_mtx, &philo->last_meal, gettime(MILLISECOND));
-	sharper_usleep(philo->data->tteat * 1000, philo->data);
-	safe_mutex_handler(&philo->right_fork->fork, UNLOCK);
-	safe_mutex_handler(&philo->left_fork->fork, UNLOCK);
+	usleep(philo->data->tteat * 1000);//, philo->data);
 	if (philo->data->max_meal > 0 && philo->meal_counter == philo->data->max_meal)
 		set_b(&philo->philo_mtx, &philo->isfull, true);
 	safe_mutex_handler(&philo->right_fork->fork, UNLOCK);
 	safe_mutex_handler(&philo->left_fork->fork, UNLOCK);
-	printf("%d last ate at %ld\n", philo->index, philo->last_meal - philo->data->simulation_date);
+	// printf("%d last ate at %ld\n", philo->index, philo->last_meal - philo->data->simulation_date);
 }
 
 void    starting_simulation(t_data *data)
 {
 	int	i;
 
-	i = -1;
-	safe_mutex_handler(&data->start_mtx, LOCK);
+	// safe_mutex_handler(&data->start_mtx, LOCK);
 	if (data->max_meal == 0)
 		return ;
 	else if (data->nb_philo == 1)
@@ -78,25 +75,36 @@ void    starting_simulation(t_data *data)
 		safe_thread_handler(&data->philos[0].thread_index, ft_alone, &data->philos[0], CREATE);// handle when only one philo
 	}
 	else 
-		while(++i < data->nb_philo)
+	{
+		safe_mutex_handler(&data->start_mtx, LOCK);
+		data->simulation_date = gettime(MILLISECOND);
+		i = 0;
+		while(i < data->nb_philo)
 		{
 			safe_thread_handler(&data->philos[i].thread_index,
 			starting_dinner, &data->philos[i], CREATE);
 			printf("thread nb %lu as been created\n", data->philos[i].thread_index);
+			i += 2;
 		}
-	// monitoring
-	// safe_thread_handler(&data->monitor, monitor_dinner, data, CREATE);
-	// printf("\nmonitor id = %lu\n\n", data->monitor);
-	data->simulation_date = gettime(MILLISECOND);
-	// safe_thread_handler(&data->monitor, monitor_dinner, data, JOIN);
+		safe_mutex_handler(&data->start_mtx, UNLOCK);
+		usleep(150);
+		safe_mutex_handler(&data->start_mtx, LOCK);
+		i = 1;
+		while(i < data->nb_philo)
+		{
+			safe_thread_handler(&data->philos[i].thread_index,
+			starting_dinner, &data->philos[i], CREATE);
+			// printf("thread nb %lu as been created\n", data->philos[i].thread_index);
+			i += 2;
+		}
+		safe_mutex_handler(&data->start_mtx, UNLOCK);
+	}
+	// data->simulation_date = gettime(MILLISECOND);
 
 	// now all threads ready 
-	safe_mutex_handler(&data->start_mtx, UNLOCK);
 	set_b(&data->variable_mtx, &data->trheads_sync, true);
 	
 	// Wait for all
-	i = -1;
-	
 }
 
 void    *starting_dinner(void *data)
@@ -119,11 +127,11 @@ void    *starting_dinner(void *data)
 			break;
 		eat(philo);
 		
-
 		write_status(SLEEPING, philo, DEBUG_MODE);
-		sharper_usleep(philo->data->ttsleep * 1000, philo->data);
-		
+		usleep(philo->data->ttsleep * 1000);//, philo->data);
 		think(philo);
+		if ((philo->data->nb_philo % 2) && philo->data->tteat >= philo->data->ttsleep)
+			usleep((philo->data->tteat - philo->data->ttsleep + 10) * 1000);
 	}
 
 	return (NULL);

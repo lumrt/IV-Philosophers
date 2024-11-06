@@ -6,7 +6,7 @@
 /*   By: lumaret <lumaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 16:54:41 by lucas             #+#    #+#             */
-/*   Updated: 2024/11/06 18:13:13 by lumaret          ###   ########.fr       */
+/*   Updated: 2024/11/06 20:03:55 by lumaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,14 @@ static void	assign_forks(t_philo *philo, t_fork *forks, int position)
 	int	philo_nbr;
 
 	philo_nbr = philo->data->nb_philo;
-	philo->right_fork = &forks[(position + 1) % philo_nbr];
-	philo->left_fork = &forks[position];
 	if (philo->index % 2 == 0)
 	{
 		philo->right_fork = &forks[position];
 		philo->left_fork = &forks[(position + 1) % philo_nbr];
+	}else
+	{
+		philo->right_fork = &forks[(position + 1) % philo_nbr];
+		philo->left_fork = &forks[position];
 	}
 }
 

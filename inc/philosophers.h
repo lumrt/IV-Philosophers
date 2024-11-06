@@ -9,7 +9,7 @@
 #include <sys/time.h> // get time of the day
 #include <errno.h> // better error handling espacially for mutexes
 
-# define DEBUG_MODE 1
+# define DEBUG_MODE 0
 
 typedef pthread_mutex_t	t_mutex; // avoid line_too_long
 
