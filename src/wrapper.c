@@ -6,7 +6,7 @@
 /*   By: lumaret <lumaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 16:57:08 by lucas             #+#    #+#             */
-/*   Updated: 2024/11/04 13:11:50 by lumaret          ###   ########.fr       */
+/*   Updated: 2024/11/06 17:16:20 by lumaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,10 +72,13 @@ static void	handle_thread_error(int status, t_flags flag)
 		error_exit("Caller does not have correct permissions");
 	else if (status == EINVAL && flag == CREATE)
 		error_exit("Value specified by attr is invalid");
-	else if (status == EINVAL && (flag == JOIN || flag - DETACH))
+	else if (status == EINVAL && (flag == JOIN || flag == DETACH))
 		error_exit("the value specified by thread is not joinable");
 	else if (status == ESRCH)
-		error_exit("No thread could be fond by this ID");
+	{
+		// printf("%d\n", flag);
+		error_exit("No thread could be fond by this ID\n");
+	}
 	else if (status == EDEADLK)
 		error_exit("Deadlock was detected on the thread");
 }

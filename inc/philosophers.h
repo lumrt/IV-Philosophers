@@ -62,7 +62,7 @@ typedef struct s_philo
 	t_fork	*right_fork;
 	t_mutex	philo_mtx; // useful races with monitor
 	pthread_t	thread_index;
-	pthread_t	monitoring;
+
 	t_mutex	*start_mtx;
 	t_data	*data;
 }	t_philo;
@@ -133,4 +133,4 @@ void    *starting_dinner(void *data);
 
 /////// MONITORING.c ///////////
 
-void    *monitor_dinner(void *data2);
+int    monitor_dinner(t_data* data);

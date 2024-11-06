@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   write.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucas <lucas@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lumaret <lumaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 12:09:30 by lucas             #+#    #+#             */
-/*   Updated: 2024/10/29 17:47:25 by lucas            ###   ########.fr       */
+/*   Updated: 2024/11/06 18:34:28 by lumaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static void write_status_debug(t_philo_status status, t_philo *philo, long elaps
 {
     if (status == TAKING_FIRST_FORK && !sim_finish(philo->data))
         printf("%-6ld %d has taken first fork 🍴\n", elapsed ,philo->index);
-    else if (status == TAKING_FIRST_FORK && !sim_finish(philo->data))
+    else if (status == TAKING_SECOND_FORK && !sim_finish(philo->data))
         printf("%-6ld %d has taken second fork 🍴\n", elapsed ,philo->index);
     else if (status == EATING && !sim_finish(philo->data))
         printf("%-6ld %d is eating 🍜\n", elapsed, philo->index);

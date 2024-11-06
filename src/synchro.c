@@ -6,7 +6,7 @@
 /*   By: lumaret <lumaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 18:09:20 by lucas             #+#    #+#             */
-/*   Updated: 2024/11/04 12:32:16 by lumaret          ###   ########.fr       */
+/*   Updated: 2024/11/06 17:09:18 by lumaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,10 @@ bool    all_running(t_mutex *mutex, long *threads, long nb_philo)
     rest = false;
     safe_mutex_handler(mutex, LOCK);
     if (*threads == nb_philo)
+	{
+		printf("all thread are running simultanately\n");
         rest = true;
+	}
     safe_mutex_handler(mutex, UNLOCK);
      
     return (rest);

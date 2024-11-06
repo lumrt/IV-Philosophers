@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucas <lucas@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lumaret <lumaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 14:30:30 by lucas             #+#    #+#             */
-/*   Updated: 2024/09/07 18:18:49 by lucas            ###   ########.fr       */
+/*   Updated: 2024/11/06 18:48:48 by lumaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,10 +60,10 @@ static long    ft_atol(const char *str)
 void    parsing(t_data *data, char **av)
 {
 	data->nb_philo = ft_atol(av[1]);
-	data->ttdie = ft_atol(av[2]) * 1e3;
-	data->tteat = ft_atol(av[3]) * 1e3;
-	data->ttsleep = ft_atol(av[4]) * 1e3;
-	if (data->ttdie < 6e4 || data->tteat < 6e4 || data->ttsleep < 6e4) // 6e4 = 60K = 60ms
+	data->ttdie = ft_atol(av[2]);
+	data->tteat = ft_atol(av[3]);
+	data->ttsleep = ft_atol(av[4]);
+	if (data->ttdie < 60 || data->tteat < 60 || data->ttsleep < 60) // 6e4 = 60K = 60ms
 		error_exit("Timestamps must be major than 60ms");
 	if (av[5])
 		data->max_meal = atol(av[5]);
