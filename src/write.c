@@ -6,7 +6,7 @@
 /*   By: lumaret <lumaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 12:09:30 by lucas             #+#    #+#             */
-/*   Updated: 2024/11/06 20:15:31 by lumaret          ###   ########.fr       */
+/*   Updated: 2024/11/07 21:41:57 by lumaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,10 @@ void    write_status(t_philo_status status, t_philo *philo, bool debug)
 
     safe_mutex_handler(&philo->data->write_mtx, LOCK);
     if (debug)
-        write_status_debug(status, philo, elapsed); // TODO  
+        write_status_debug(status, philo, elapsed);
     else 
     {
-        if ((status == TAKING_FIRST_FORK || status == TAKING_FIRST_FORK) 
+        if ((status == TAKING_FIRST_FORK || status == TAKING_SECOND_FORK) 
             && !sim_finish(philo->data))
             printf("%-6ld %d has taken a fork\n", elapsed ,philo->index);
         else if (status == EATING && !sim_finish(philo->data))

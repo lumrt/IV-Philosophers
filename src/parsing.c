@@ -6,13 +6,12 @@
 /*   By: lumaret <lumaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 14:30:30 by lucas             #+#    #+#             */
-/*   Updated: 2024/11/06 18:48:48 by lumaret          ###   ########.fr       */
+/*   Updated: 2024/11/07 21:41:38 by lumaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-/* ./philo nb ttdie tteat ttsleep [max meal]*/
 inline static bool 	is_space(char c)
 {
 	return ((c >= 9 && c <= 13) || c == 32);
@@ -63,10 +62,10 @@ void    parsing(t_data *data, char **av)
 	data->ttdie = ft_atol(av[2]);
 	data->tteat = ft_atol(av[3]);
 	data->ttsleep = ft_atol(av[4]);
-	if (data->ttdie < 60 || data->tteat < 60 || data->ttsleep < 60) // 6e4 = 60K = 60ms
+	if (data->ttdie < 60 || data->tteat < 60 || data->ttsleep < 60)
 		error_exit("Timestamps must be major than 60ms");
 	if (av[5])
 		data->max_meal = atol(av[5]);
 	else
-		data->max_meal = -1; // use as a flag
+		data->max_meal = -1;
 }

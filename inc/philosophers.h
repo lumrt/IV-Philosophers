@@ -1,17 +1,17 @@
 #include <stdio.h> // printf waiting my integration
 
-#include <stdlib.h> // malloc, free
-#include <string.h> // malloc, free
-#include <unistd.h> // usleep
-#include <stdbool.h> // boolean condition
-#include <limits.h> // INTMAX
-#include <pthread.h> // mutex, threading
-#include <sys/time.h> // get time of the day
-#include <errno.h> // better error handling espacially for mutexes
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <stdbool.h>
+#include <limits.h>
+#include <pthread.h>
+#include <sys/time.h>
+#include <errno.h>
 
 # define DEBUG_MODE 0
 
-typedef pthread_mutex_t	t_mutex; // avoid line_too_long
+typedef pthread_mutex_t	t_mutex;
 
 typedef struct s_data	t_data;
 
@@ -44,6 +44,7 @@ typedef enum e_status
 	TAKING_SECOND_FORK,
 	DIED,
 }	t_philo_status;
+
 //** Structures **//
 
 typedef struct s_fork

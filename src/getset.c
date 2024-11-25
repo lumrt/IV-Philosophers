@@ -6,7 +6,7 @@
 /*   By: lumaret <lumaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 17:58:52 by lucas             #+#    #+#             */
-/*   Updated: 2024/11/06 17:57:14 by lumaret          ###   ########.fr       */
+/*   Updated: 2024/11/07 21:41:29 by lumaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,5 @@ long	get_l(t_mutex *mtx, long *value)
 }
 bool	sim_finish(t_data *data)
 {
-	// printf("the sim is finished ? = %d\n", get_b(&data->variable_mtx, &data->is_end));
 	return (get_b(&data->variable_mtx, &data->is_end));
 }

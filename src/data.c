@@ -6,7 +6,7 @@
 /*   By: lumaret <lumaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 16:54:41 by lucas             #+#    #+#             */
-/*   Updated: 2024/11/06 20:03:55 by lumaret          ###   ########.fr       */
+/*   Updated: 2024/11/25 18:21:01 by lumaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,9 @@ static void	philo_init(t_data *data)
 		philo->index = i + 1;
 		philo->data = data;
 		philo->last_meal = gettime(MILLISECOND);
-		printf("init meal %ld\n",philo->last_meal);
 		philo->start_mtx = &data->start_mtx;
 		safe_mutex_handler(&philo->philo_mtx, INIT);
-		printf("le philo %d a bien ete initialisé\n", philo->index);
 		assign_forks(philo, data->forks, i);
-		printf("ses fourchettes egalements\n\n");
 		i++;
 	}
 }

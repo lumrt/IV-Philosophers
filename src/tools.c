@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tools.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucas <lucas@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lumaret <lumaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 13:45:20 by lucas             #+#    #+#             */
-/*   Updated: 2024/10/10 12:08:55 by lucas            ###   ########.fr       */
+/*   Updated: 2024/11/07 21:42:01 by lumaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,34 +30,22 @@ long	gettime(t_time_code time_code)
 	
 }
 
-// gettimeofday sharper
 
 void	sharper_usleep(long usec, t_data *data)
 {
 	long	start;
-	long	elapsed;
-	long	remaining;
 	
 	start = gettime(MICROSECOND);
 	while (gettime(MICROSECOND) - start < usec)
 	{
 		if (sim_finish(data))
 			break;
-		elapsed = gettime(MICROSECOND) - start;
-		remaining = usec - elapsed;
-		if (remaining > 1e3)
-			usleep(usec / 2);
-		else
-		{
-			// SPINLOCK
-			while (gettime(MICROSECOND) - start < usec)
-			;
-		}
+		usleep(1000);
 	}
 }
 
 void    error_exit(char *err_str)
 {
-	printf("%s", err_str); // change by my integration
+	printf("%s", err_str);
 	exit(EXIT_FAILURE);
 }
