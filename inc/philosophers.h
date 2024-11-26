@@ -9,8 +9,6 @@
 #include <sys/time.h>
 #include <errno.h>
 
-# define DEBUG_MODE 0
-
 typedef pthread_mutex_t	t_mutex;
 
 typedef struct s_data	t_data;
@@ -112,6 +110,7 @@ void	safe_thread_handler(pthread_t *thread, void *(*foo)(void *), void *data, t_
 ////////// DATA.C ///////////////
 
 void    init_all(t_data *data);
+void	free_all(t_data *data);
 
 ///////// GET SET.c /////////////
 

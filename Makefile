@@ -1,12 +1,12 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    MAKEFILE                                           :+:      :+:    :+:    #
+#    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
 #    By: lucas <lucas@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/31 14:42:31 by lucas             #+#    #+#              #
-#    Updated: 2024/10/29 17:52:52 by lucas            ###   ########.fr        #
+#    Updated: 2024/11/25 18:50:55 by lucas            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,6 +25,8 @@ SRC	     =		src/data.c	\
 
 
 CC       =	    cc
+
+C est du pur racisme juste il a vu les cheveux bouclés et il a dit non
 
 CFLAGS   =	    -Wall -Wextra -Werror -pthread -g3 -I./inc
 

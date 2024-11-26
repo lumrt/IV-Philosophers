@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   data.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lumaret <lumaret@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lucas <lucas@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 16:54:41 by lucas             #+#    #+#             */
-/*   Updated: 2024/11/25 18:21:01 by lumaret          ###   ########.fr       */
+/*   Updated: 2024/11/26 15:07:34 by lucas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,4 +70,22 @@ void    init_all(t_data *data)
 		i++;
 	}
 	philo_init(data);
+}
+
+void	free_all(t_data *data)
+{
+	int i;
+
+	i = 0;
+	while (i < data->nb_philo)
+	{
+		pthread_mutex_destroy(&data->forks[i].fork);
+		pthread_mutex_destroy(&data->philos[i].philo_mtx);
+		i++;
+	}
+	pthread_mutex_destroy(&data->variable_mtx);
+	pthread_mutex_destroy(&data->write_mtx);
+	pthread_mutex_destroy(&data->start_mtx);
+	free(data->philos);
+	free(data->forks);
 }

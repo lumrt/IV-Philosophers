@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lumaret <lumaret@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lucas <lucas@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 13:43:02 by lucas             #+#    #+#             */
-/*   Updated: 2024/11/07 21:41:54 by lumaret          ###   ########.fr       */
+/*   Updated: 2024/11/26 15:08:21 by lucas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,4 +30,5 @@ int	main(int ac, char **av)
 	int i = -1;
 	while (++i < data.nb_philo)
 		safe_thread_handler(&data.philos[i].thread_index, NULL, NULL, JOIN);
+	free_all(&data);
 }
