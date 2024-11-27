@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   data.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucas <lucas@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lumaret <lumaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 16:54:41 by lucas             #+#    #+#             */
-/*   Updated: 2024/11/26 15:07:34 by lucas            ###   ########.fr       */
+/*   Updated: 2024/11/27 17:24:03 by lumaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ static void	assign_forks(t_philo *philo, t_fork *forks, int position)
 	{
 		philo->right_fork = &forks[position];
 		philo->left_fork = &forks[(position + 1) % philo_nbr];
-	}else
+	}
+	else
 	{
 		philo->right_fork = &forks[(position + 1) % philo_nbr];
 		philo->left_fork = &forks[position];
@@ -30,7 +31,7 @@ static void	assign_forks(t_philo *philo, t_fork *forks, int position)
 
 static void	philo_init(t_data *data)
 {
-	int	i;
+	int		i;
 	t_philo	*philo;
 
 	i = 0;
@@ -47,7 +48,8 @@ static void	philo_init(t_data *data)
 		i++;
 	}
 }
-void    init_all(t_data *data)
+
+void	init_all(t_data *data)
 {
 	int	i;
 
@@ -74,7 +76,7 @@ void    init_all(t_data *data)
 
 void	free_all(t_data *data)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < data->nb_philo)

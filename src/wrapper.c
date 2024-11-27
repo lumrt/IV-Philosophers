@@ -6,14 +6,11 @@
 /*   By: lumaret <lumaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 16:57:08 by lucas             #+#    #+#             */
-/*   Updated: 2024/11/06 17:16:20 by lumaret          ###   ########.fr       */
+/*   Updated: 2024/11/27 16:16:44 by lumaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
-
-
- // MUTEX WRAPPER //
 
 static void	handle_mtx_error(int status, t_flags flag)
 {
@@ -24,15 +21,14 @@ static void	handle_mtx_error(int status, t_flags flag)
 	else if (status == EINVAL && flag == INIT)
 		error_exit("Value specified by attr is invalid");
 	else if (status == EDEADLK)
-		error_exit("deadlock would occure if the thread blocked wtng for mutex");
+		error_exit("deadlock would occure");
 	else if (status == ENOMEM)
-		error_exit("The process can't allocate enough memory to create a thread");
+		error_exit("The process can't allocate enough memory");
 	else if (status == EBUSY)
 		error_exit("Mutex is locked");
-
 }
 
-void    safe_mutex_handler(t_mutex *mtx, t_flags flag)
+void	safe_mutex_handler(t_mutex *mtx, t_flags flag)
 {
 	int	status;
 
@@ -60,8 +56,6 @@ void    safe_mutex_handler(t_mutex *mtx, t_flags flag)
 		error_exit("Wrong flag for mutex\n");
 }
 
-// THREADS WRAPPER //
-
 static void	handle_thread_error(int status, t_flags flag)
 {
 	if (status == 0)
@@ -75,16 +69,13 @@ static void	handle_thread_error(int status, t_flags flag)
 	else if (status == EINVAL && (flag == JOIN || flag == DETACH))
 		error_exit("the value specified by thread is not joinable");
 	else if (status == ESRCH)
-	{
-		// printf("%d\n", flag);
 		error_exit("No thread could be fond by this ID\n");
-	}
 	else if (status == EDEADLK)
 		error_exit("Deadlock was detected on the thread");
 }
 
 void	safe_thread_handler(pthread_t *thread, void *(*foo)(void *),
-		 void *data, t_flags flag)
+		void *data, t_flags flag)
 {
 	if (flag == CREATE)
 		handle_thread_error(pthread_create(thread, NULL, foo, data), flag);
@@ -94,4 +85,4 @@ void	safe_thread_handler(pthread_t *thread, void *(*foo)(void *),
 		handle_thread_error(pthread_detach(*thread), flag);
 	else
 		error_exit("Wrong flag for thread pls use <CREATE> <JOIN> <DETACH>");
-}			
+}

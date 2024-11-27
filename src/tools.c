@@ -6,7 +6,7 @@
 /*   By: lumaret <lumaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 13:45:20 by lucas             #+#    #+#             */
-/*   Updated: 2024/11/07 21:42:01 by lumaret          ###   ########.fr       */
+/*   Updated: 2024/11/27 16:34:22 by lumaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 long	gettime(t_time_code time_code)
 {
-	struct timeval tv;
+	struct timeval	tv;
 
 	if (gettimeofday(&tv, NULL))
 		error_exit("Gettimeofday Failed !");
@@ -27,24 +27,22 @@ long	gettime(t_time_code time_code)
 	else
 		error_exit("Wrong input for Gettime");
 	return (42);
-	
 }
-
 
 void	sharper_usleep(long usec, t_data *data)
 {
 	long	start;
-	
+
 	start = gettime(MICROSECOND);
 	while (gettime(MICROSECOND) - start < usec)
 	{
 		if (sim_finish(data))
-			break;
+			break ;
 		usleep(1000);
 	}
 }
 
-void    error_exit(char *err_str)
+void	error_exit(char *err_str)
 {
 	printf("%s", err_str);
 	exit(EXIT_FAILURE);

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: lucas <lucas@student.42.fr>                +#+  +:+       +#+         #
+#    By: lumaret <lumaret@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/31 14:42:31 by lucas             #+#    #+#              #
-#    Updated: 2024/11/25 18:50:55 by lucas            ###   ########.fr        #
+#    Updated: 2024/11/27 16:35:50 by lumaret          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,8 @@ SRC	     =		src/data.c	\
 				src/monitoring.c 	\
 				src/main.c  		\
 				src/parsing.c 	\
-				src/simulation.c 			\
+				src/simulation.c \
+				src/simulation_start.c			\
 			    src/synchro.c	\
 				src/tools.c 		\
 				src/wrapper.c 	\
@@ -25,8 +26,6 @@ SRC	     =		src/data.c	\
 
 
 CC       =	    cc
-
-C est du pur racisme juste il a vu les cheveux bouclés et il a dit non
 
 CFLAGS   =	    -Wall -Wextra -Werror -pthread -g3 -I./inc
 

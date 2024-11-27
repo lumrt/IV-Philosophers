@@ -6,13 +6,13 @@
 /*   By: lumaret <lumaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 14:30:30 by lucas             #+#    #+#             */
-/*   Updated: 2024/11/07 21:41:38 by lumaret          ###   ########.fr       */
+/*   Updated: 2024/11/27 16:02:41 by lumaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-inline static bool 	is_space(char c)
+inline static bool	is_space(char c)
 {
 	return ((c >= 9 && c <= 13) || c == 32);
 }
@@ -24,9 +24,9 @@ inline static bool	is_digit(char c)
 
 static const char	*is_valid(const char *str)
 {
-	int	len_str;
+	int			len_str;
 	const char	*nbr;
-	
+
 	len_str = 0;
 	while (is_space(*str))
 		str++;
@@ -44,7 +44,7 @@ static const char	*is_valid(const char *str)
 	return (nbr);
 }
 
-static long    ft_atol(const char *str)
+static long	ft_atol(const char *str)
 {
 	int	num;
 
@@ -56,7 +56,8 @@ static long    ft_atol(const char *str)
 		error_exit("INT MAX is the limit");
 	return (num);
 }
-void    parsing(t_data *data, char **av)
+
+void	parsing(t_data *data, char **av)
 {
 	data->nb_philo = ft_atol(av[1]);
 	data->ttdie = ft_atol(av[2]);
